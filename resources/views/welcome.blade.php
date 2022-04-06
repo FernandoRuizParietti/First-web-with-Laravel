@@ -1,95 +1,57 @@
-<!doctype html>
-<html lang="{{ app()->getLocale() }}">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('plantilla')
 
-        <title>Laravel</title>
+@section('seccion')
+<div class="container my-4">
+    <h1 class="display-4">Notas</h1>
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
+    @if(session('mensaje'))
+    <div class="alert alert-success"> <!--Alert de bootstrap  -->
+        {{session('mensaje')}}
+    </div>
 
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Raleway', sans-serif;
-                font-weight: 100;
-                height: 100vh;
-                margin: 0;
-            }
+    @endif
 
-            .full-height {
-                height: 100vh;
-            }
+    <form action="{{route('notas.crear')}}" method="POST"> <!--Aca agrego info nueva a mi db-->
+        <!--Token que evita que se pueda ingresar datos de un formulario malicioso o robot  -->
+        {{ csrf_field() }}
 
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 12px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @if (Auth::check())
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ url('/login') }}">Login</a>
-                        <a href="{{ url('/register') }}">Register</a>
-                    @endif
-                </div>
-            @endif
-
-            <div class="content">
-                <div class="title m-b-md">
-                    Mi primer web en Laravel
-                </div>
-
-                <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
+        <!-- @error('nombre')  
+            <div class="alert alert-danger">
+                El nombre es obligatorio
             </div>
-        </div>
-    </body>
-</html>
+        @enderror -->
+        
+        <input type="text" name="nombre" placeholder="Nombre" class="form-control mb-2">
+        <input type="text" name="descripcion" placeholder="Descripcion" class="form-control mb-2">
+        <button class="btn btn-primary btn-block" type="submit">Agregar</button>
+    </form>
+
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#id</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Descripción</th>
+            <th scope="col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+            @foreach($notas as $item)
+          <tr>
+            <th scope="row">{{$item->id}}</th>
+            <td>
+                <a href="{{route('notas.detalle', $item)}}">
+                    {{$item->nombre}}
+                </a>
+            </td>
+            <td>{{$item->descripcion}}</td>
+            <td>
+                <a href="{{route('notas.editar', $item)}}" class="btn btn-warning btn-sm">Editar</a>
+            </td>
+          </tr>
+            @endforeach
+        </tbody>
+      </table>
+</div>
+@endsection
+
