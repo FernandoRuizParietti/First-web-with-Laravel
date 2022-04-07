@@ -10,7 +10,8 @@ class PageController extends Controller
 {
     public function inicio(){
         //el metodo all() lo saco de Elocuent
-        $notas = App\Nota::all();  //App es el namespace y Nota el nombre del modelo en Nota.php
+        //$notas = App\Nota::all();  //App es el namespace y Nota el nombre del modelo en Nota.php
+        $notas = App\Nota::paginate(2);//Reem plazo el metodo all() por paginate() y le indico cuantos elementos ver po pagina
         return view('welcome', compact('notas'));
     }
 
@@ -52,6 +53,14 @@ class PageController extends Controller
 
         return back()->with('mensaje','Nota actualizada!'); //Este metodo me devuelve a la pagina anterior
 
+    }
+
+    public function eliminar($id){
+
+        $notaUpdate = App\Nota::findOrFail($id); // si es fail, envia automaticamente un e404
+        $notaUpdate->delete();
+
+        return back()->with('mensaje','Nota eliminada!'); //Este metodo me devuelve a la pagina anterior
     }
 
     public function fotos(){

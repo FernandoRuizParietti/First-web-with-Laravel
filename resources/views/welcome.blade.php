@@ -14,12 +14,6 @@
     <form action="{{route('notas.crear')}}" method="POST"> <!--Aca agrego info nueva a mi db-->
         <!--Token que evita que se pueda ingresar datos de un formulario malicioso o robot  -->
         {{ csrf_field() }}
-
-        <!-- @error('nombre')  
-            <div class="alert alert-danger">
-                El nombre es obligatorio
-            </div>
-        @enderror -->
         
         <input type="text" name="nombre" placeholder="Nombre" class="form-control mb-2">
         <input type="text" name="descripcion" placeholder="Descripcion" class="form-control mb-2">
@@ -47,11 +41,19 @@
             <td>{{$item->descripcion}}</td>
             <td>
                 <a href="{{route('notas.editar', $item)}}" class="btn btn-warning btn-sm">Editar</a>
+
+                <form action="{{route('notas.eliminar',$item)}}" method="POST" class="d-inline">
+                    <input type="hidden" name="_method" value="DELETE">
+                    {{ csrf_field() }}
+                    <button class="btn btn-danger btn-sm" type="submit">X</button>
+                </form>
             </td>
           </tr>
             @endforeach
         </tbody>
-      </table>
+    </table>
+    
 </div>
+{{$notas->links('pagination::bootstrap-4')}}
 @endsection
 
